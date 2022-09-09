@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import styled from "styled-components";
-
-import {baseURL} from "../shared/constants";
 import {useAxios} from "../hooks/useAxios";
 
 // components
@@ -22,15 +19,15 @@ const Wrapper = styled.div`
 const Home = () => {
   const [seasons, setSeasons] = useState();
 
-  const {response, loading, error} = useAxios({
-    url: "/Title/k_8rolfb4c/tt0944947",
-  });
+  // const {response, loading, error} = useAxios({
+  //   url: "/Title/k_8rolfb4c/tt0944947",
+  // });
 
-  useEffect(() => {
-    if (response?.tvSeriesInfo) {
-      setSeasons(response.tvSeriesInfo.seasons);
-    }
-  }, [response]);
+  // useEffect(() => {
+  //   if (response?.tvSeriesInfo) {
+  //     setSeasons(response.tvSeriesInfo.seasons);
+  //   }
+  // }, [response]);
 
   // console.log("RESPONSE", response);
 
