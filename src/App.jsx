@@ -1,13 +1,19 @@
 import React from "react";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import "./App.css";
 
-function App() {
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
+
+const App = () => {
   return (
-    <div className="App">
-      <h1>Credo Web</h1>
-      <h2>Game of Thrones React js</h2>
-    </div>
+    <BrowserRouter>
+      {/* <Navbar /> */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
