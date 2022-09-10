@@ -1,6 +1,8 @@
 import React, {useEffect} from "react";
 import {Routes, Route, useParams} from "react-router-dom";
 import styled from "styled-components";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
 
 import {episodesInSeasonMockData} from "../shared/mockData";
 import noImageAvailable from "../assets/images/episodes/no-picture-available.jpg";
@@ -9,6 +11,15 @@ import noImageAvailable from "../assets/images/episodes/no-picture-available.jpg
 import {useAxios} from "../hooks/useAxios";
 
 const StyledSeasonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  background-color: rgb(239, 241, 244);
+  padding: 30px;
+`;
+
+const EpisodesWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -25,9 +36,15 @@ const StyledTitle = styled.h1`
 `;
 
 const EpisodeWrapper = styled.div`
+  position: relative;
   border-radius: 25px;
   overflow: hidden;
   width: 28rem;
+  cursor: pointer;
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
+  &:hover {
+    box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.85);
+  }
 `;
 
 const EpisodeImage = styled.div`
@@ -38,7 +55,7 @@ const EpisodeImage = styled.div`
   background-size: cover;
   background-image: url(${(props) => props.image || noImageAvailable});
   &:after {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     content: "";
     height: 100%;
     left: 0;
@@ -46,6 +63,7 @@ const EpisodeImage = styled.div`
     top: 0;
     width: 100%;
   }
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
 `;
 
 const EpisodeContent = styled.div`
@@ -54,7 +72,7 @@ const EpisodeContent = styled.div`
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 10px;
-  background: #999;
+  background: #fff;
   padding: 20px;
 `;
 
@@ -64,15 +82,45 @@ const EpisodeTitle = styled.div`
   text-transform: uppercase;
   font-weight: 900;
   font-size: 1.2rem;
-  padding: 5px 0;
+  padding: 5px 0 0 0;
 `;
 
 const EpisodeSubTitle = styled.div`
+  font-weight: 700;
   text-align: left;
   width: 100%;
+  padding: 5px 0 10px 0;
+  position: relative;
+  &:after {
+    background: rgba(0, 0, 0, 0.05);
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 `;
 
-const EpisodeSummary = styled.div``;
+const StyledStarIcon = styled(StarBorderIcon)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  color: #fff;
+`;
+
+const StyledActiveStarIcon = styled(StarIcon)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  color: #fff;
+`;
+
+const EpisodeSummary = styled.div`
+  padding: 20px 0 10px 0;
+`;
 
 const Season = () => {
   let {id} = useParams();
@@ -89,21 +137,25 @@ const Season = () => {
 
   return (
     <StyledSeasonWrapper>
-      <StyledTitle>Game Of Thrones Episodes</StyledTitle>
-      {loadingMock === false ? (
-        episodesInSeasonMockData.episodes.map((episode) => (
-          <EpisodeWrapper>
-            <EpisodeImage image={episode.image} />
-            <EpisodeContent>
-              <EpisodeTitle>{episode.title}</EpisodeTitle>
-              <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
-              <EpisodeSummary>{episode.plot}</EpisodeSummary>
-            </EpisodeContent>
-          </EpisodeWrapper>
-        ))
-      ) : (
-        <div>Loading...</div>
-      )}
+      <EpisodesWrapper>
+        <StyledTitle>Game Of Thrones Episodes</StyledTitle>
+        {loadingMock === false ? (
+          episodesInSeasonMockData.episodes.map((episode) => (
+            <EpisodeWrapper>
+              <StyledStarIcon />
+              {/* <StyledActiveStarIcon /> */}
+              <EpisodeImage image={episode.image} />
+              <EpisodeContent>
+                <EpisodeTitle>{episode.title}</EpisodeTitle>
+                <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
+                <EpisodeSummary>{episode.plot}</EpisodeSummary>
+              </EpisodeContent>
+            </EpisodeWrapper>
+          ))
+        ) : (
+          <div>Loading...</div>
+        )}
+      </EpisodesWrapper>
     </StyledSeasonWrapper>
   );
 };
