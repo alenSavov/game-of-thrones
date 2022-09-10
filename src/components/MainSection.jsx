@@ -1,13 +1,13 @@
 import React, {useState, useCallback} from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { seasonsWallpaper } from "../shared/constants";
-
 //components
+import { seasonsWallpaper } from "../shared/constants";
 import useWindowSize from "../hooks/useWindowSize";
 
 const StyledSectionWrapper = styled.div`
@@ -36,8 +36,11 @@ const StyledSwiperItem = styled.div`
   border-radius: 25px;
   cursor: pointer;
   background-image: url(${(props) => props.imageUrl || 'https://ychef.files.bbci.co.uk/976x549/p01wzkmh.jpg'});
-  box-shadow: 0px -1px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px -1px 10px 0px rgba(0,0,0,0.55);
   margin: 30px 0px;
+  &:hover {
+    box-shadow: 0px -1px 10px 0px rgba(0,0,0,0.85);
+  };
   &:before {
     background: rgba(0, 0, 0, 0.3);
     content: "";
@@ -87,12 +90,13 @@ const getSlidePerView = (windowWith) => {
 };
 
 const MainSection = ({data}) => {
+  let navigate = useNavigate();
   const windowSize = useWindowSize();
   const windowWidth = windowSize.width;
   let slidePerView = getSlidePerView(windowWidth);
 
-  const handleOnClick = () => {
-    console.log("CLICK");
+  const handleOnClick = (seasonNumber) => () => {
+    navigate(`/season/${seasonNumber}`);
   };
 
   return (
@@ -111,7 +115,7 @@ const MainSection = ({data}) => {
       >
         {data.tvSeriesInfo.seasons.map((season, i) => (
           <SwiperSlide key={`Season-${season}`}>
-            <StyledSwiperItem style={{backgroundImage: `url(${seasonsWallpaper[i]})`}}>
+            <StyledSwiperItem onClick={handleOnClick(season)} style={{backgroundImage: `url(${seasonsWallpaper[i]})`}}>
               <SwiperItemContentWrapper>
                 <StyledTitle>{season}</StyledTitle>
                 <StyledSubTitle>Season</StyledSubTitle>
