@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Routes, Route, useParams} from "react-router-dom";
 import styled from "styled-components";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -123,8 +123,23 @@ const EpisodeSummary = styled.div`
 `;
 
 const Season = () => {
+  const [favorites, setFavorites] = useState([]);
   let {id} = useParams();
   const loadingMock = false;
+
+  const handleToggleFavoriteStateClick = (id) => () => {
+    if (!favorites.includes(id)) {
+      setFavorites((prev) => [...prev, id]);
+      return;
+    }
+
+    if (favorites.includes(id)) {
+      const filteredFavorites = favorites.filter(
+        (episodeId) => episodeId !== id
+      );
+      setFavorites(filteredFavorites);
+    }
+  };
 
   // 	  const {response, loading, error} = useAxios({
   //     url: `/SeasonEpisodes/k_8rolfb4c/tt0944947/${id}`,
@@ -133,25 +148,35 @@ const Season = () => {
   //   console.log("RESPONSE 2", response);
   // console.log("ERROR", error);
 
-  console.log("EPISODES", episodesInSeasonMockData.episodes);
+  console.log("FAVORITES", favorites);
 
   return (
     <StyledSeasonWrapper>
       <EpisodesWrapper>
         <StyledTitle>Game Of Thrones Episodes</StyledTitle>
         {loadingMock === false ? (
-          episodesInSeasonMockData.episodes.map((episode) => (
-            <EpisodeWrapper>
-              <StyledStarIcon />
-              {/* <StyledActiveStarIcon /> */}
-              <EpisodeImage image={episode.image} />
-              <EpisodeContent>
-                <EpisodeTitle>{episode.title}</EpisodeTitle>
-                <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
-                <EpisodeSummary>{episode.plot}</EpisodeSummary>
-              </EpisodeContent>
-            </EpisodeWrapper>
-          ))
+          episodesInSeasonMockData.episodes.map((episode) => {
+            const isFavorite = favorites.includes(episode.id);
+            return (
+              <EpisodeWrapper key={episode.id}>
+                {isFavorite ? (
+                  <StyledActiveStarIcon
+                    onClick={handleToggleFavoriteStateClick(episode.id)}
+                  />
+                ) : (
+                  <StyledStarIcon
+                    onClick={handleToggleFavoriteStateClick(episode.id)}
+                  />
+                )}
+                <EpisodeImage image={episode.image} />
+                <EpisodeContent>
+                  <EpisodeTitle>{episode.title}</EpisodeTitle>
+                  <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
+                  <EpisodeSummary>{episode.plot}</EpisodeSummary>
+                </EpisodeContent>
+              </EpisodeWrapper>
+            );
+          })
         ) : (
           <div>Loading...</div>
         )}
