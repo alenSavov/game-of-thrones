@@ -54,6 +54,7 @@ const EpisodeImage = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url(${(props) => props.image || noImageAvailable});
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
   &:after {
     background: rgba(0, 0, 0, 0.4);
     content: "";
@@ -63,7 +64,6 @@ const EpisodeImage = styled.div`
     top: 0;
     width: 100%;
   }
-  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
 `;
 
 const EpisodeContent = styled.div`
