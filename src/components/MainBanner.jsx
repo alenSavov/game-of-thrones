@@ -1,6 +1,6 @@
 import {memo} from "react";
 import styled from "styled-components";
-import img from "../assets/images/home-page-banner.jpg";
+import img from "../assets/images/home-page-banner.webp";
 
 const StyledImageItem = styled.div`
   position: relative;

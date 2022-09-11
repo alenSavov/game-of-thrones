@@ -5,7 +5,8 @@ import "./App.css";
 //components
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
-import Season from "./components/Season";
+import Episode from "./components/Episode";
+import Episodes from "./components/Episodes";
 
 const App = () => {
   return (
@@ -13,7 +14,8 @@ const App = () => {
       {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="season/:id" element={<Season />} />
+        <Route path="season/:id" element={<Episodes />} />
+        <Route path="episode/:id" element={<Episode />} />
       </Routes>
     </BrowserRouter>
   );

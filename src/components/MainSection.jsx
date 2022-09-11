@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper";
@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 //components
-import { seasonsWallpaper } from "../shared/constants";
+import {seasonsWallpaper} from "../shared/constants";
 import useWindowSize from "../hooks/useWindowSize";
 
 const StyledSectionWrapper = styled.div`
@@ -35,12 +35,13 @@ const StyledSwiperItem = styled.div`
   position: relative;
   border-radius: 25px;
   cursor: pointer;
-  background-image: url(${(props) => props.imageUrl || 'https://ychef.files.bbci.co.uk/976x549/p01wzkmh.jpg'});
-  box-shadow: 0px -1px 10px 0px rgba(0,0,0,0.55);
+  background-image: url(${(props) =>
+    props.imageUrl || "https://ychef.files.bbci.co.uk/976x549/p01wzkmh.jpg"});
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
   margin: 30px 0px;
   &:hover {
-    box-shadow: 0px -1px 10px 0px rgba(0,0,0,0.85);
-  };
+    box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.85);
+  }
   &:before {
     background: rgba(0, 0, 0, 0.3);
     content: "";
@@ -64,16 +65,16 @@ const SwiperItemContentWrapper = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  color: #FFF;
+  color: #fff;
   width: 100%;
   text-transform: uppercase;
   font-weight: 900;
-  font-size: 3.60rem;
-  `
-  
+  font-size: 3.6rem;
+`;
+
 const StyledSubTitle = styled(StyledTitle)`
   font-size: 1.42rem;
-`
+`;
 
 const getSlidePerView = (windowWith) => {
   if (windowWith > 768 && windowWith < 1024) {
@@ -99,6 +100,8 @@ const MainSection = ({data}) => {
     navigate(`/season/${seasonNumber}`);
   };
 
+  console.log("DATA", data);
+
   return (
     <StyledSectionWrapper>
       <h1>Game of Thrones</h1>
@@ -115,7 +118,10 @@ const MainSection = ({data}) => {
       >
         {data.tvSeriesInfo.seasons.map((season, i) => (
           <SwiperSlide key={`Season-${season}`}>
-            <StyledSwiperItem onClick={handleOnClick(season)} style={{backgroundImage: `url(${seasonsWallpaper[i]})`}}>
+            <StyledSwiperItem
+              onClick={handleOnClick(season)}
+              style={{backgroundImage: `url(${seasonsWallpaper[i]})`}}
+            >
               <SwiperItemContentWrapper>
                 <StyledTitle>{season}</StyledTitle>
                 <StyledSubTitle>Season</StyledSubTitle>
@@ -124,6 +130,8 @@ const MainSection = ({data}) => {
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <h2>All Episodes</h2>
     </StyledSectionWrapper>
   );
 };

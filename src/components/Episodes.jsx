@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Routes, Route, useParams} from "react-router-dom";
+import {Routes, Route, useParams, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 
 import {episodesInSeasonMockData} from "../shared/mockData";
-import noImageAvailable from "../assets/images/episodes/no-picture-available.jpg";
+import noImageAvailable from "../assets/images/no-picture-available.webp";
 
 //components
 import {useAxios} from "../hooks/useAxios";
@@ -28,6 +28,7 @@ const EpisodesWrapper = styled.div`
   height: 100%;
   overflow: hidden;
   gap: 20px;
+  padding: 10px;
 `;
 
 const StyledTitle = styled.h1`
@@ -40,7 +41,6 @@ const EpisodeWrapper = styled.div`
   border-radius: 25px;
   overflow: hidden;
   width: 28rem;
-  cursor: pointer;
   box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
   &:hover {
     box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.85);
@@ -74,6 +74,7 @@ const EpisodeContent = styled.div`
   padding: 10px 10px;
   background: #fff;
   padding: 20px;
+  cursor: pointer;
 `;
 
 const EpisodeTitle = styled.div`
@@ -108,6 +109,7 @@ const StyledStarIcon = styled(StarBorderIcon)`
   right: 20px;
   z-index: 100;
   color: #fff;
+  cursor: pointer;
 `;
 
 const StyledActiveStarIcon = styled(StarIcon)`
@@ -116,16 +118,19 @@ const StyledActiveStarIcon = styled(StarIcon)`
   right: 20px;
   z-index: 100;
   color: #fff;
+  cursor: pointer;
 `;
 
 const EpisodeSummary = styled.div`
   padding: 20px 0 10px 0;
 `;
 
-const Season = () => {
-  const [favorites, setFavorites] = useState([]);
+const Episodes = () => {
+  let navigate = useNavigate();
   let {id} = useParams();
   const loadingMock = false;
+
+  const [favorites, setFavorites] = useState([]);
 
   const handleToggleFavoriteStateClick = (id) => () => {
     if (!favorites.includes(id)) {
@@ -141,14 +146,17 @@ const Season = () => {
     }
   };
 
+  const handleOpenEpisodeDetails = (id) => () => {
+    console.log("CLICK", id);
+    navigate(`/episode/${id}`);
+  };
+
   // 	  const {response, loading, error} = useAxios({
   //     url: `/SeasonEpisodes/k_8rolfb4c/tt0944947/${id}`,
   //   });
 
   //   console.log("RESPONSE 2", response);
   // console.log("ERROR", error);
-
-  console.log("FAVORITES", favorites);
 
   return (
     <StyledSeasonWrapper>
@@ -169,7 +177,7 @@ const Season = () => {
                   />
                 )}
                 <EpisodeImage image={episode.image} />
-                <EpisodeContent>
+                <EpisodeContent onClick={handleOpenEpisodeDetails(episode.id)}>
                   <EpisodeTitle>{episode.title}</EpisodeTitle>
                   <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
                   <EpisodeSummary>{episode.plot}</EpisodeSummary>
@@ -185,4 +193,4 @@ const Season = () => {
   );
 };
 
-export default Season;
+export default Episodes;
