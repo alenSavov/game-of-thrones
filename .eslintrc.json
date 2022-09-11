@@ -6,7 +6,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "eslint:recommended"
   ],
   "overrides": [],
   "parserOptions": {
@@ -15,6 +16,7 @@
   },
   "plugins": ["react"],
   "rules": {
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "no-mixed-spaces-and-tabs": 0
   }
 }

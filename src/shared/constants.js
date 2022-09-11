@@ -11,4 +11,4 @@ export const seasonsWallpaper = [
   season1, season2,season3,season4,season5,season6,season7,season8
 ];
 
-export const apiKey = 'k_lqp2hr35';
+export const apiKey = 'k_le9105s0';
