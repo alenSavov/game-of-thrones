@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {apiKey} from "../shared/constants";
 
 // dummy data
-import {singleEpisodeMockData} from "../shared/mockData";
+// import {singleEpisodeMockData} from "../shared/mockData";
 
 //components
 import noImageAvailable from "../assets/images/no-picture-available.webp";
@@ -102,6 +102,10 @@ const EpisodeMainTitle = styled.div`
 
 const EpisodeDetails = () => {
   let {id} = useParams();
+
+  // const loading = false;
+  // const error = undefined;
+  // const response = singleEpisodeMockData;
 
   const {response, loading, error} = useAxios({
     url: `/Title/${apiKey}/${id}`,

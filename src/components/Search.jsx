@@ -21,13 +21,13 @@ const SearchInput = styled.input`
   }
 `;
 
-const Search = ({searchParam, setSearchParam}) => {
+const Search = ({searchParam, handleSearch}) => {
   return (
     <SearchInputWrapper>
       <SearchInput
         placeholder="Search by episode title..."
         value={searchParam}
-        onChange={(e) => setSearchParam(e.target.value)}
+        onChange={(e) => handleSearch(e.target.value)}
       />
     </SearchInputWrapper>
   );

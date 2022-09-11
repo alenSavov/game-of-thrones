@@ -1,4 +1,4 @@
-import React, {useState, memo} from "react";
+import React, {memo} from "react";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {Swiper, SwiperSlide} from "swiper/react";
@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 import {seasonsWallpaper} from "../shared/constants";
 
 // hooks
-import {useAxios} from "../hooks/useAxios";
 import useWindowSize from "../hooks/useWindowSize";
 
 const StyledSectionWrapper = styled.div`

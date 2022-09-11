@@ -3,24 +3,9 @@ import styled from "styled-components";
 import {LazyLoadImage} from "react-lazy-load-image-component";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import {Routes, Route, useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 
-const EpisodesWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  gap: 20px;
-  padding: 10px;
-`;
-
-const StyledTitle = styled.h1`
-  width: 100%;
-  text-align: center;
-`;
+import noImageAvailable from "../assets/images/no-picture-available.webp";
 
 const EpisodeWrapper = styled.div`
   position: relative;
@@ -129,7 +114,6 @@ const Episode = ({episode}) => {
   };
 
   const handleOpenEpisodeDetails = (id) => () => {
-    console.log("CLICK", id);
     navigate(`/episode/${id}`);
   };
 

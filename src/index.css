@@ -17,3 +17,8 @@ code {
 #root {
   background-color: rgb(239, 241, 244);
 }
+
+.infinite-scroll-component {
+  overflow: hidden !important;
+  padding: 20px;
+}

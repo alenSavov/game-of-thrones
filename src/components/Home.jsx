@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {apiKey} from "../shared/constants";
 
 //dummy data
-import {seriesAndSeasonsMockData} from "../shared/mockData";
+// import {seriesAndSeasonsMockData} from "../shared/mockData";
 
 // components
 import MainBanner from "./MainBanner";
@@ -23,9 +23,12 @@ const Wrapper = styled.div`
   background-color: rgb(239, 241, 244);
 `;
 
-const Home = () => {
-  const loadingMock = false;
+// dummy data
+// const loading = false;
+// const error = undefined;
+// const response = seriesAndSeasonsMockData;
 
+const Home = () => {
   const {response, loading, error} = useAxios({
     url: `/Title/${apiKey}/tt0944947`,
   });

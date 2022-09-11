@@ -10,3 +10,5 @@ import season8 from "../assets/images/seasons/season8.webp";
 export const seasonsWallpaper = [
   season1, season2,season3,season4,season5,season6,season7,season8
 ];
+
+export const apiKey = 'k_lqp2hr35';
