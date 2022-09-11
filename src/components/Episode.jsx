@@ -1,62 +1,53 @@
-import React from "react";
-import {useParams} from "react-router-dom";
+import React, {useState} from "react";
 import styled from "styled-components";
+import {LazyLoadImage} from "react-lazy-load-image-component";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import {Routes, Route, useParams, useNavigate} from "react-router-dom";
 
-// dummy data
-import {singleEpisodeMockData} from "../shared/mockData";
-
-//components
-import {useAxios} from "../hooks/useAxios";
-import noImageAvailable from "../assets/images/no-picture-available.webp";
-
-const EpisodeDetailsPageWrapper = styled.div`
-  width: 100%;
-  height: 100vh;
+const EpisodesWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  gap: 20px;
+  padding: 10px;
+`;
 
-  background-color: rgb(239, 241, 244);
+const StyledTitle = styled.h1`
+  width: 100%;
+  text-align: center;
 `;
 
 const EpisodeWrapper = styled.div`
-  width: 90%;
-  //   height: 100%;
-  background-color: #fff;
-  box-shadow: rgb(0 0 0 / 5%) 0rem 1.25rem 1.6875rem 0rem;
-  margin-top: -30px;
-  margin-bottom: 30px;
-  backdrop-filter: saturate(200%) blur(20px);
-  border-radius: 20px;
+  position: relative;
+  border-radius: 25px;
   overflow: hidden;
+  width: 28rem;
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
+  &:hover {
+    box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.85);
+  }
 `;
 
 const EpisodeImageWrapper = styled.div`
-  width: 100%;
-  height: 45vh;
   position: relative;
-`;
-
-const EpisodeImage = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-  background-position: top;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-image: url(${(props) => props.image || noImageAvailable});
-  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
-  &:before {
+  &:after {
+    position: absolute;
+    left: 0;
+    top: 0;
     background: rgba(0, 0, 0, 0.4);
     content: "";
     height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
     width: 100%;
+    box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
   }
 `;
+
+const EpisodeLazyLoadImage = styled(LazyLoadImage)``;
 
 const EpisodeContent = styled.div`
   display: flex;
@@ -69,85 +60,103 @@ const EpisodeContent = styled.div`
   cursor: pointer;
 `;
 
-const StyledText = styled.div`
+const EpisodeTitle = styled.div`
   text-align: left;
   width: 100%;
   text-transform: uppercase;
   font-weight: 900;
-  font-size: 1rem;
-  padding: 5px 0;
+  font-size: 1.2rem;
+  padding: 5px 0 0 0;
 `;
 
-const StyledSubText = styled(StyledText)`
-  text-transform: capitalize;
+const EpisodeSubTitle = styled.div`
   font-weight: 700;
-  font-size: 0.8rem;
-`;
-
-const EpisodeMainTitle = styled.div`
-  text-align: center;
+  text-align: left;
   width: 100%;
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 2.5rem;
-  color: #fff;
-  z-index: 100;
-  position: absolute;
-  top: 50%;
-  left: 0;
+  padding: 5px 0 10px 0;
+  position: relative;
+  &:after {
+    background: rgba(0, 0, 0, 0.05);
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 `;
 
-const Episode = () => {
+const StyledStarIcon = styled(StarBorderIcon)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  color: #fff;
+  cursor: pointer;
+`;
+
+const StyledActiveStarIcon = styled(StarIcon)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  color: #fff;
+  cursor: pointer;
+`;
+
+const EpisodeSummary = styled.div`
+  padding: 20px 0 10px 0;
+`;
+
+const Episode = ({episode}) => {
+  const [favorites, setFavorites] = useState([]);
+  let navigate = useNavigate();
+  const isFavorite = favorites.includes(episode.id);
   let {id} = useParams();
 
-  //   const {response, loading, error} = useAxios({
-  //     url: `/Title/k_8rolfb4c/${id}`,
-  //   });
+  const handleToggleFavoriteStateClick = (id) => () => {
+    if (!favorites.includes(id)) {
+      setFavorites((prev) => [...prev, id]);
+      return;
+    }
 
-  //   console.log("RESPONCE SINGLE EPISODE", response);
+    if (favorites.includes(id)) {
+      const filteredFavorites = favorites.filter(
+        (episodeId) => episodeId !== id
+      );
+      setFavorites(filteredFavorites);
+    }
+  };
+
+  const handleOpenEpisodeDetails = (id) => () => {
+    console.log("CLICK", id);
+    navigate(`/episode/${id}`);
+  };
 
   return (
-    <EpisodeDetailsPageWrapper>
-      <EpisodeImageWrapper>
-        <EpisodeImage
-          title={singleEpisodeMockData.title}
-          image={singleEpisodeMockData.image}
+    <EpisodeWrapper key={episode.id}>
+      {isFavorite ? (
+        <StyledActiveStarIcon
+          onClick={handleToggleFavoriteStateClick(episode.id)}
         />
-        <EpisodeMainTitle>{singleEpisodeMockData.title}</EpisodeMainTitle>
+      ) : (
+        <StyledStarIcon onClick={handleToggleFavoriteStateClick(episode.id)} />
+      )}
+      <EpisodeImageWrapper>
+        <EpisodeLazyLoadImage
+          width={"100%"}
+          height={250}
+          effect="blur"
+          src={episode.image ?? noImageAvailable}
+          alt={episode.title}
+        />
       </EpisodeImageWrapper>
-      <EpisodeWrapper>
-        <EpisodeContent>
-          <StyledText>
-            Year: <StyledSubText>{singleEpisodeMockData.year}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Release date:{" "}
-            <StyledSubText>{singleEpisodeMockData.releaseDate}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Duration:
-            <StyledSubText>
-              <StyledSubText>{singleEpisodeMockData.runtimeStr}</StyledSubText>
-            </StyledSubText>
-          </StyledText>
-          <StyledText>
-            Directors:{" "}
-            <StyledSubText>{singleEpisodeMockData.directors}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Writers:{" "}
-            <StyledSubText>{singleEpisodeMockData.writers}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Genres:{" "}
-            <StyledSubText>{singleEpisodeMockData.genres}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Summery <StyledSubText>{singleEpisodeMockData.plot}</StyledSubText>
-          </StyledText>
-        </EpisodeContent>
-      </EpisodeWrapper>
-    </EpisodeDetailsPageWrapper>
+      <EpisodeContent onClick={handleOpenEpisodeDetails(episode.id)}>
+        <EpisodeTitle>{episode.title}</EpisodeTitle>
+        <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
+        <EpisodeSummary>{episode.plot}</EpisodeSummary>
+      </EpisodeContent>
+    </EpisodeWrapper>
   );
 };
 

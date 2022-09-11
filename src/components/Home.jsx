@@ -1,14 +1,18 @@
-import React, {useEffect, useLayoutEffect ,useState} from "react";
+import React from "react";
 import styled from "styled-components";
-import {useAxios} from "../hooks/useAxios";
 
-import { seriesAndSeasonsMockData } from "../shared/mockData";
+//dummy data
+import {seriesAndSeasonsMockData} from "../shared/mockData";
 
 // components
 import MainBanner from "./MainBanner";
 import MainSection from "./MainSection";
 
+//hooks
+import {useAxios} from "../hooks/useAxios";
+
 const Wrapper = styled.div`
+  position: relative;
   height: 100%;
   width: 100%;
   display: flex;
@@ -24,7 +28,7 @@ const Home = () => {
   // const {response, loading, error} = useAxios({
   //   url: "/Title/k_8rolfb4c/tt0944947",
   // });
-  
+
   // console.log("RESPONSE", response);
   // console.log("ERROR", error);
 
@@ -32,11 +36,14 @@ const Home = () => {
     <div className="App">
       <Wrapper>
         <MainBanner />
-        {loadingMock === false ? <MainSection data={seriesAndSeasonsMockData} /> : <div>Loading...</div>}
+        {loadingMock === false ? (
+          <MainSection data={seriesAndSeasonsMockData} />
+        ) : (
+          <div>Loading...</div>
+        )}
       </Wrapper>
     </div>
   );
 };
 
 export default Home;
-

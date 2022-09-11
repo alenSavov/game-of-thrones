@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react";
+import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import styled from "styled-components";
 import {Swiper, SwiperSlide} from "swiper/react";
@@ -6,8 +6,14 @@ import {Pagination} from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
-//components
+import {episodesInSeasonMockData} from "../shared/mockData";
 import {seasonsWallpaper} from "../shared/constants";
+
+//components
+import Episode from "./Episode";
+
+// hooks
+import {useAxios} from "../hooks/useAxios";
 import useWindowSize from "../hooks/useWindowSize";
 
 const StyledSectionWrapper = styled.div`
@@ -24,6 +30,13 @@ const StyledSectionWrapper = styled.div`
   margin-left: 30px;
   margin-right: 30px;
   z-index: 10;
+`;
+
+const SectionTitle = styled.h1`
+  color: #000;
+  font-size: 2.2rem;
+  font-weight: 900;
+  width: 100%;
 `;
 
 const StyledSwiperItem = styled.div`
@@ -76,6 +89,18 @@ const StyledSubTitle = styled(StyledTitle)`
   font-size: 1.42rem;
 `;
 
+const EpisodesWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  gap: 20px;
+  padding: 30px 10px;
+`;
+
 const getSlidePerView = (windowWith) => {
   if (windowWith > 768 && windowWith < 1024) {
     return 3;
@@ -91,6 +116,8 @@ const getSlidePerView = (windowWith) => {
 };
 
 const MainSection = ({data}) => {
+  const [allEpisodes, setAllEpisodes] = useState([]);
+
   let navigate = useNavigate();
   const windowSize = useWindowSize();
   const windowWidth = windowSize.width;
@@ -100,12 +127,28 @@ const MainSection = ({data}) => {
     navigate(`/season/${seasonNumber}`);
   };
 
-  console.log("DATA", data);
+  const episodes = [];
+  // data.tvSeriesInfo.seasons.forEach((season) => {
+  //   const {response, loading, error} = useAxios({
+  //     url: `/SeasonEpisodes/k_8rolfb4c/tt0944947/${season}`,
+  //   });
+
+  //   if (response) episodes.push(...response.episodes);
+  // });
+
+  // console.log("EPISODES", episodes);
+
+  data.tvSeriesInfo.seasons.forEach((season) => {
+    console.log("SEA", season);
+
+    episodes.push(...episodesInSeasonMockData.episodes);
+  });
+
+  console.log("EPISODES", episodes);
 
   return (
     <StyledSectionWrapper>
-      <h1>Game of Thrones</h1>
-      <h2>Seasons</h2>
+      <SectionTitle>Seasons</SectionTitle>
 
       <Swiper
         slidesPerView={slidePerView}
@@ -131,7 +174,12 @@ const MainSection = ({data}) => {
         ))}
       </Swiper>
 
-      <h2>All Episodes</h2>
+      <EpisodesWrapper>
+        <SectionTitle>All Episodes</SectionTitle>
+        {episodes.map((episode) => (
+          <Episode episode={episode} />
+        ))}
+      </EpisodesWrapper>
     </StyledSectionWrapper>
   );
 };
