@@ -1,6 +1,7 @@
 import React, {memo} from "react";
 import {useParams} from "react-router-dom";
 import styled from "styled-components";
+import {apiKey} from "../shared/constants";
 
 // dummy data
 import {singleEpisodeMockData} from "../shared/mockData";
@@ -102,53 +103,55 @@ const EpisodeMainTitle = styled.div`
 const EpisodeDetails = () => {
   let {id} = useParams();
 
-  //   const {response, loading, error} = useAxios({
-  //     url: `/Title/k_8rolfb4c/${id}`,
-  //   });
+  const {response, loading, error} = useAxios({
+    url: `/Title/${apiKey}/${id}`,
+  });
 
-  //   console.log("RESPONCE SINGLE EPISODE", response);
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <EpisodeDetailsPageWrapper>
-      <EpisodeImageWrapper>
-        <EpisodeImage
-          title={singleEpisodeMockData.title}
-          image={singleEpisodeMockData.image}
-        />
-        <EpisodeMainTitle>{singleEpisodeMockData.title}</EpisodeMainTitle>
-      </EpisodeImageWrapper>
-      <EpisodeWrapper>
-        <EpisodeContent>
-          <StyledText>
-            Year: <StyledSubText>{singleEpisodeMockData.year}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Release date:{" "}
-            <StyledSubText>{singleEpisodeMockData.releaseDate}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Duration:
-            <StyledSubText>
-              <StyledSubText>{singleEpisodeMockData.runtimeStr}</StyledSubText>
-            </StyledSubText>
-          </StyledText>
-          <StyledText>
-            Directors:{" "}
-            <StyledSubText>{singleEpisodeMockData.directors}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Writers:{" "}
-            <StyledSubText>{singleEpisodeMockData.writers}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Genres:{" "}
-            <StyledSubText>{singleEpisodeMockData.genres}</StyledSubText>
-          </StyledText>
-          <StyledText>
-            Summery <StyledSubText>{singleEpisodeMockData.plot}</StyledSubText>
-          </StyledText>
-        </EpisodeContent>
-      </EpisodeWrapper>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <EpisodeImageWrapper>
+            <EpisodeImage title={response.title} image={response.image} />
+            <EpisodeMainTitle>{response.title}</EpisodeMainTitle>
+          </EpisodeImageWrapper>
+          <EpisodeWrapper>
+            <EpisodeContent>
+              <StyledText>
+                Year: <StyledSubText>{response.year}</StyledSubText>
+              </StyledText>
+              <StyledText>
+                Release date:{" "}
+                <StyledSubText>{response.releaseDate}</StyledSubText>
+              </StyledText>
+              <StyledText>
+                Duration:
+                <StyledSubText>
+                  <StyledSubText>{response.runtimeStr}</StyledSubText>
+                </StyledSubText>
+              </StyledText>
+              <StyledText>
+                Directors: <StyledSubText>{response.directors}</StyledSubText>
+              </StyledText>
+              <StyledText>
+                Writers: <StyledSubText>{response.writers}</StyledSubText>
+              </StyledText>
+              <StyledText>
+                Genres: <StyledSubText>{response.genres}</StyledSubText>
+              </StyledText>
+              <StyledText>
+                Summery <StyledSubText>{response.plot}</StyledSubText>
+              </StyledText>
+            </EpisodeContent>
+          </EpisodeWrapper>
+        </>
+      )}
     </EpisodeDetailsPageWrapper>
   );
 };

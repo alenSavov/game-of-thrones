@@ -6,6 +6,7 @@ const SearchInputWrapper = styled.div`
   dispaly: flex:
   justify-content: center;
   align-items: center;
+  text-align: center;
 `;
 
 const SearchInput = styled.input`

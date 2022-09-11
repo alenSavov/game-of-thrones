@@ -1,17 +1,12 @@
-import React, {useState, useMemo} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import React, {useState, memo} from "react";
+import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import {episodesInSeasonMockData} from "../shared/mockData";
 import {seasonsWallpaper} from "../shared/constants";
-
-//components
-import Episode from "./Episode";
-import Search from "./Search";
 
 // hooks
 import {useAxios} from "../hooks/useAxios";
@@ -90,18 +85,6 @@ const StyledSubTitle = styled(StyledTitle)`
   font-size: 1.42rem;
 `;
 
-const EpisodesWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  // height: 100%;
-  overflow: hidden;
-  gap: 20px;
-  padding: 30px 10px;
-`;
-
 const getSlidePerView = (windowWith) => {
   if (windowWith > 768 && windowWith < 1024) {
     return 3;
@@ -117,9 +100,6 @@ const getSlidePerView = (windowWith) => {
 };
 
 const MainSection = ({data}) => {
-  const [allEpisodes, setAllEpisodes] = useState([]);
-  const [searchParam, setSearchParam] = useState([""]);
-
   let navigate = useNavigate();
   const windowSize = useWindowSize();
   const windowWidth = windowSize.width;
@@ -127,38 +107,6 @@ const MainSection = ({data}) => {
 
   const handleOnClick = (seasonNumber) => () => {
     navigate(`/season/${seasonNumber}`);
-  };
-
-  const episodes = [];
-  // data.tvSeriesInfo.seasons.forEach((season) => {
-  //   const {response, loading, error} = useAxios({
-  //     url: `/SeasonEpisodes/k_8rolfb4c/tt0944947/${season}`,
-  //   });
-
-  //   if (response) episodes.push(...response.episodes);
-  // });
-
-  // console.log("EPISODES", episodes);
-
-  data.tvSeriesInfo.seasons.forEach((season) => {
-    console.log("SEA", season);
-
-    episodes.push(...episodesInSeasonMockData.episodes);
-  });
-
-  // console.log("EPISODES", episodes);
-
-  const search = (episodes) => {
-    if (searchParam.length > 0) {
-      return episodes.filter((episode) =>
-        episode.title
-          .toString()
-          .toLowerCase()
-          .includes(searchParam.toString().toLowerCase())
-      );
-    } else {
-      return episodes;
-    }
   };
 
   return (
@@ -187,17 +135,8 @@ const MainSection = ({data}) => {
           </SwiperSlide>
         ))}
       </Swiper>
-
-      <EpisodesWrapper>
-        <SectionTitle>All Episodes</SectionTitle>
-        <Search searchParam={searchParam} setSearchParam={setSearchParam} />
-
-        {search(episodes).map((episode) => (
-          <Episode episode={episode} />
-        ))}
-      </EpisodesWrapper>
     </StyledSectionWrapper>
   );
 };
 
-export default MainSection;
+export default memo(MainSection);

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {apiKey} from "../shared/constants";
 
 //dummy data
 import {seriesAndSeasonsMockData} from "../shared/mockData";
@@ -25,19 +26,20 @@ const Wrapper = styled.div`
 const Home = () => {
   const loadingMock = false;
 
-  // const {response, loading, error} = useAxios({
-  //   url: "/Title/k_8rolfb4c/tt0944947",
-  // });
+  const {response, loading, error} = useAxios({
+    url: `/Title/${apiKey}/tt0944947`,
+  });
 
-  // console.log("RESPONSE", response);
-  // console.log("ERROR", error);
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="App">
       <Wrapper>
         <MainBanner />
-        {loadingMock === false ? (
-          <MainSection data={seriesAndSeasonsMockData} />
+        {loading === false ? (
+          <MainSection data={response} />
         ) : (
           <div>Loading...</div>
         )}
