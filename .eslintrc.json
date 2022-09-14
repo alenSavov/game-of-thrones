@@ -17,6 +17,7 @@
   "plugins": ["react"],
   "rules": {
     "react/prop-types": "off",
-    "no-mixed-spaces-and-tabs": 0
+    "no-mixed-spaces-and-tabs": 0,
+    "no-unused-vars": "warn"
   }
 }

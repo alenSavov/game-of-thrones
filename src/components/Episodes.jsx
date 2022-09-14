@@ -1,16 +1,21 @@
-import React, {memo, useState, useEffect} from "react";
+import React, {memo, useState, useEffect, useCallback} from "react";
 import styled from "styled-components";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 //dummy data
-// import {episodesInSeasonMockData} from "../shared/mockData";
+import {episodesInSeasonMockData} from "../shared/mockData";
 
-import {apiKey} from "../shared/constants";
+import {
+  API_KEY,
+  GAME_OF_THRONES_API_KEY,
+  LOCAL_STORAGE_KEY_FAVORITES,
+} from "../shared/constants";
 
 //components
 import Episode from "./Episode";
 import Search from "./Search";
+import ErrorScreen from "./ErrorScreen";
 
 //hooks
 import {useAxios} from "../hooks/useAxios";
@@ -42,23 +47,52 @@ const StyledTitle = styled.h1`
   text-align: center;
 `;
 
+const StyledButton = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 15px;
+  cursor: pointer;
+  z-index: 100;
+  font-weight: 700;
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
+`;
+
 // dummy data
 // const response = episodesInSeasonMockData;
 // const loading = false;
+// const error = undefined;
 
 const Episodes = () => {
+  const navigate = useNavigate();
+  let {id} = useParams();
+
+  const [favorites, setFavorites] = useState([]);
   const [searchParam, setSearchParam] = useState([""]);
   const [searchEpisodesResult, setSearchEpisodeResult] = useState([]);
+  const [displayEpisodes, setDispalyEpisodes] = useState([]);
   const [slice, setSlice] = useState(6);
   const [hasMore, setHasMore] = useState(true);
 
-  let {id} = useParams();
-
-  const [displayEpisodes, setDispalyEpisodes] = useState([]);
-
   const {response, loading, error} = useAxios({
-    url: `/SeasonEpisodes/${apiKey}/tt0944947/${id}`,
+    url: `/SeasonEpisodes/${API_KEY}/${GAME_OF_THRONES_API_KEY}/${id}`,
   });
+
+  const handleFavoriteState = (episodeId) => {
+    if (!favorites.includes(episodeId)) {
+      setFavorites((prev) => [...prev, episodeId]);
+      return;
+    }
+
+    const filteredResult = favorites.filter(
+      (favorite) => favorite !== episodeId
+    );
+
+    setFavorites(filteredResult);
+  };
 
   const handleSearch = (searchParam) => {
     setSearchParam(searchParam);
@@ -90,6 +124,10 @@ const Episodes = () => {
     }
   };
 
+  const handleBackButton = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
   useEffect(() => {
     setSlice(6);
     if (response) {
@@ -99,8 +137,22 @@ const Episodes = () => {
     }
   }, [response?.episodes]);
 
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_FAVORITES));
+    if (data) setFavorites(data);
+  }, []);
+
+  useEffect(() => {
+    if (favorites?.length) {
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY_FAVORITES,
+        JSON.stringify(favorites)
+      );
+    }
+  }, [favorites]);
+
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ErrorScreen errorMessage={error} />;
   }
 
   if (loading) {
@@ -110,6 +162,7 @@ const Episodes = () => {
   return (
     <StyledSeasonWrapper>
       <EpisodesWrapper>
+        <StyledButton onClick={handleBackButton}>Back</StyledButton>
         <StyledTitle>All Episodes from season - {id}</StyledTitle>
         <Search searchParam={searchParam} handleSearch={handleSearch} />
 
@@ -125,9 +178,18 @@ const Episodes = () => {
             hasMore={hasMore}
           >
             <EpisodesWrapper>
-              {displayEpisodes.map((episode) => (
-                <Episode key={episode.id} episode={episode} />
-              ))}
+              {displayEpisodes.map((episode) => {
+                const isFavorite = favorites.includes(episode.id);
+
+                return (
+                  <Episode
+                    key={episode.id}
+                    episode={episode}
+                    isFavorite={isFavorite}
+                    handleFavoriteState={handleFavoriteState}
+                  />
+                );
+              })}
             </EpisodesWrapper>
           </InfiniteScroll>
         )}

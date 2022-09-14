@@ -1,11 +1,10 @@
-import React, {useState} from "react";
+import React, {memo} from "react";
 import styled from "styled-components";
 import {LazyLoadImage} from "react-lazy-load-image-component";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import {useParams, useNavigate} from "react-router-dom";
-
-import noImageAvailable from "../assets/images/no-picture-available.webp";
+import noImageAvailable from "../assets/images/no-image-available.webp";
 
 const EpisodeWrapper = styled.div`
   position: relative;
@@ -93,49 +92,32 @@ const EpisodeSummary = styled.div`
   padding: 20px 0 10px 0;
 `;
 
-const Episode = ({episode}) => {
-  const [favorites, setFavorites] = useState([]);
-  let navigate = useNavigate();
-  const isFavorite = favorites.includes(episode.id);
-  let {id} = useParams();
+const Episode = ({episode, handleFavoriteState, isFavorite}) => {
+  const navigate = useNavigate();
 
-  const handleToggleFavoriteStateClick = (id) => () => {
-    if (!favorites.includes(id)) {
-      setFavorites((prev) => [...prev, id]);
-      return;
-    }
+  const {id} = useParams();
 
-    if (favorites.includes(id)) {
-      const filteredFavorites = favorites.filter(
-        (episodeId) => episodeId !== id
-      );
-      setFavorites(filteredFavorites);
-    }
-  };
-
-  const handleOpenEpisodeDetails = (id) => () => {
+  const handleOpenEpisodeDetails = (id) => {
     navigate(`/episode/${id}`);
   };
 
   return (
     <EpisodeWrapper key={episode.id}>
       {isFavorite ? (
-        <StyledActiveStarIcon
-          onClick={handleToggleFavoriteStateClick(episode.id)}
-        />
+        <StyledActiveStarIcon onClick={() => handleFavoriteState(episode.id)} />
       ) : (
-        <StyledStarIcon onClick={handleToggleFavoriteStateClick(episode.id)} />
+        <StyledStarIcon onClick={() => handleFavoriteState(episode.id)} />
       )}
       <EpisodeImageWrapper>
         <EpisodeLazyLoadImage
-          width={"100%"}
-          height={250}
+          width="100%"
+          height="250"
           effect="blur"
           src={episode.image ?? noImageAvailable}
           alt={episode.title}
         />
       </EpisodeImageWrapper>
-      <EpisodeContent onClick={handleOpenEpisodeDetails(episode.id)}>
+      <EpisodeContent onClick={() => handleOpenEpisodeDetails(episode.id)}>
         <EpisodeTitle>{episode.title}</EpisodeTitle>
         <EpisodeSubTitle>{`Season ${id} - Episode ${episode.episodeNumber} - Rating: ${episode.imDbRating}`}</EpisodeSubTitle>
         <EpisodeSummary>{episode.plot}</EpisodeSummary>
@@ -144,4 +126,4 @@ const Episode = ({episode}) => {
   );
 };
 
-export default Episode;
+export default memo(Episode);

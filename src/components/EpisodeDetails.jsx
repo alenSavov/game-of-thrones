@@ -1,18 +1,21 @@
-import React, {memo} from "react";
-import {useParams} from "react-router-dom";
+import React, {memo, useCallback} from "react";
+import {useParams, useNavigate} from "react-router-dom";
 import styled from "styled-components";
-import {apiKey} from "../shared/constants";
+import {API_KEY} from "../shared/constants";
 
 // dummy data
 // import {singleEpisodeMockData} from "../shared/mockData";
 
 //components
-import noImageAvailable from "../assets/images/no-picture-available.webp";
+import noImageAvailable from "../assets/images/no-image-available.webp";
+import ErrorScreen from "./ErrorScreen";
 
 //hooks
 import {useAxios} from "../hooks/useAxios";
 
 const EpisodeDetailsPageWrapper = styled.div`
+  position: relative;
+
   width: 100%;
   height: 100vh;
   display: flex;
@@ -100,7 +103,22 @@ const EpisodeMainTitle = styled.div`
   left: 0;
 `;
 
+const StyledButton = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 15px;
+  cursor: pointer;
+  z-index: 100;
+  font-weight: 700;
+  box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.55);
+`;
+
 const EpisodeDetails = () => {
+  const navigate = useNavigate();
   let {id} = useParams();
 
   // const loading = false;
@@ -108,15 +126,20 @@ const EpisodeDetails = () => {
   // const response = singleEpisodeMockData;
 
   const {response, loading, error} = useAxios({
-    url: `/Title/${apiKey}/${id}`,
+    url: `/Title/${API_KEY}/${id}`,
   });
 
+  const handleBackButton = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ErrorScreen errorMessage={error} />;
   }
 
   return (
     <EpisodeDetailsPageWrapper>
+      <StyledButton onClick={handleBackButton}>Back</StyledButton>
       {loading ? (
         <div>Loading...</div>
       ) : (

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {apiKey} from "../shared/constants";
+import {API_KEY, GAME_OF_THRONES_API_KEY} from "../shared/constants";
 
 //dummy data
 // import {seriesAndSeasonsMockData} from "../shared/mockData";
@@ -8,6 +8,7 @@ import {apiKey} from "../shared/constants";
 // components
 import MainBanner from "./MainBanner";
 import MainSection from "./MainSection";
+import ErrorScreen from "./ErrorScreen";
 
 //hooks
 import {useAxios} from "../hooks/useAxios";
@@ -30,11 +31,11 @@ const Wrapper = styled.div`
 
 const Home = () => {
   const {response, loading, error} = useAxios({
-    url: `/Title/${apiKey}/tt0944947`,
+    url: `/Title/${API_KEY}/${GAME_OF_THRONES_API_KEY}`,
   });
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ErrorScreen errorMessage={error} />;
   }
 
   return (
