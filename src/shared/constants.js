@@ -11,7 +11,7 @@ export const seasonsWallpaper = [
   season1, season2,season3,season4,season5,season6,season7,season8
 ];
 
-export const API_KEY = 'k_8rolfb4c';
+export const API_KEY = 'k_bbs9awin';
 export const GAME_OF_THRONES_API_KEY = 'tt0944947';
 
 export const  LOCAL_STORAGE_KEY_FAVORITES = "FAVORITES";
